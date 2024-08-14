@@ -15,6 +15,7 @@ SRC	= 	src/main.c	\
 		src/utilities.c \
 		src/map.c \
 		src/ncurses.c \
+		src/calculate.c \
 	
 
 OBJ	=	$(SRC:.c=.o)

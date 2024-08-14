@@ -22,9 +22,16 @@
     /*map.c*/
     void print_map(map_t* map);
     map_t* generate_map();
+    void place_mines(map_t* new_map); 
+    map_t* copy_map(map_t* original_map);
     /*ncurses.c*/
     void init_ncurses();
     void draw_grid(map_t* map);
-    void handle_mouse(map_t* map);
+    void handle_mouse(map_t* map, map_t *map_solved);
+    void do_move(map_t* map, map_t* map_solved, int y, int x);
+    /*calculate.c*/
+    void calculate_adjacent(map_t* map);
+    void reveal_empty(map_t* map, map_t* map_solved, int y, int x);
+    
 
 #endif /*MINES_GAMES_H*/

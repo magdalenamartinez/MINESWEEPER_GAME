@@ -27,7 +27,11 @@ void draw_grid(map_t* map)
     refresh();
 }
 
-void handle_mouse(map_t* map) 
+/*
+    KEY UP - DOWN - LEFT - RIGHT -> para moverse, no realiza ninguna accion
+    si pulsa enter -> se estudia la posicion
+*/
+void handle_mouse(map_t* map, map_t *map_solved) 
 {
     int ch;
     int x = 1, y = 1;
@@ -50,14 +54,49 @@ void handle_mouse(map_t* map)
                 if (x < map->cols * 2 - 1) x += 2;
                 break;
             case '\n': // Enter key
-                if (map->map[y][x] == 'o') {
+                do_move(map, map_solved, y, x);
+                /*if (map->map[y][x] == ' ') {
                     map->map[y][x] = 'X';
                     mvaddch(y, x, 'X');
-                }
+                }*/
                 refresh();
                 break;
         }
         move(y, x);
         refresh();
     }
+}
+
+void do_move(map_t* map, map_t* map_solved, int y, int x)
+{
+    switch (map_solved->map[y][x])
+    {
+        case 'X': 
+            for (int i = 0; i < map->rows * 2 + 1; i++) {
+                for (int j = 0; j < map->cols * 2 + 1; j++) {
+                    map->map[i][j] = map_solved->map[i][j];
+                    if (map->map[i][j] == ' ') {
+                        map->map[i][j] = 'o';
+                    }
+                }
+            }
+            draw_grid(map);
+            //poner game over
+            printw("\nGame Over! Press any key to exit.\n");
+            getch();
+            exit(0);
+            refresh();
+            break;
+        case ' ': 
+            //recorrer y poner o
+            reveal_empty(map, map_solved, y, x);
+            draw_grid(map);
+            refresh();
+            break;
+        default:
+            map->map[y][x] = map_solved->map[y][x];
+            mvaddch(y, x, map->map[y][x]);
+            refresh();
+            break;  
+    }    
 }
