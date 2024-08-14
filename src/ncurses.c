@@ -14,6 +14,11 @@ void init_ncurses()
     noecho();
     keypad(stdscr, TRUE);
     mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
+
+    if (has_colors()) {
+        start_color();
+        init_pair(1, COLOR_RED, COLOR_BLACK);
+    }
 }
 
 void draw_grid(map_t* map)
@@ -31,6 +36,7 @@ void draw_grid(map_t* map)
     KEY UP - DOWN - LEFT - RIGHT -> para moverse, no realiza ninguna accion
     si pulsa enter -> se estudia la posicion
 */
+
 void handle_mouse(map_t* map, map_t *map_solved) 
 {
     int ch;
@@ -43,15 +49,19 @@ void handle_mouse(map_t* map, map_t *map_solved)
         switch (ch) {
             case KEY_UP:
                 if (y > 1) y -= 2;
+                play_sound("bueno.wav");
                 break;
             case KEY_DOWN:
                 if (y < map->rows * 2 - 1) y += 2;
+                play_sound("bueno.wav");
                 break;
             case KEY_LEFT:
                 if (x > 1) x -= 2;
+                play_sound("bueno.wav");
                 break;
             case KEY_RIGHT:
                 if (x < map->cols * 2 - 1) x += 2;
+                play_sound("bueno.wav");
                 break;
             case '\n': // Enter key
                 do_move(map, map_solved, y, x);
@@ -81,8 +91,11 @@ void do_move(map_t* map, map_t* map_solved, int y, int x)
                 }
             }
             draw_grid(map);
+            play_sound("boom.wav");
             //poner game over
-            printw("\nGame Over! Press any key to exit.\n");
+            attron(COLOR_PAIR(1)); // Activar el color rojo para el mensaje
+            mvprintw(map->rows * 2 + 2, 0, "GAME OVER! Press any key to exit.");
+            attroff(COLOR_PAIR(1));
             getch();
             exit(0);
             refresh();

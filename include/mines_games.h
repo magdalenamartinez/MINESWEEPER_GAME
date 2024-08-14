@@ -19,6 +19,7 @@
     } map_t;
     /*utilities.c*/
     int get_random_int(int min, int max);
+    void play_sound(const char* sound_file);
     /*map.c*/
     void print_map(map_t* map);
     map_t* generate_map();
